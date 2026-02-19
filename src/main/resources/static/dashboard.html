@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h2>Mark Attendance</h2>
+
+<input type="number" id="studentId" placeholder="Student ID">
+<input type="number" id="subjectId" placeholder="Subject ID">
+
+<select id="status">
+    <option value="PRESENT">PRESENT</option>
+    <option value="ABSENT">ABSENT</option>
+</select>
+
+<button onclick="markAttendance()">Submit</button>
+
+<p id="result"></p>
+
+<script src="script.js"></script>
+
+</body>
+</html>
