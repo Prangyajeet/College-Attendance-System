@@ -6,7 +6,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import com.college.attendance.model.Student;
+import com.college.attendance.model.Subject;
 import com.college.attendance.repository.StudentRepository;
+import com.college.attendance.repository.SubjectRepository;
 
 @Service
 public class StudentService {
@@ -14,42 +16,56 @@ public class StudentService {
     @Autowired
     private StudentRepository studentRepository;
 
-    // ✅ Save Student
-    public Student saveStudent(Student student) {
-        return studentRepository.save(student);
+    @Autowired
+    private SubjectRepository subjectRepository;
+
+    // Load students by subject
+    public List<Student> getStudentsBySubject(String subjectId) {
+
+        Subject subject = subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new RuntimeException("Subject not found"));
+
+        String semId = subject.getSemester().getSemId();
+        String deptId = subject.getDepartment().getDeptId();
+
+        return studentRepository.findBySemester_SemIdAndDepartment_DeptId(
+                semId,
+                deptId
+        );
     }
 
-    // ✅ Get All Students
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+    // Optional: students by semester (for testing)
+    public List<Student> getStudentsBySemester(String semId) {
+        throw new RuntimeException("Use subject-based filtering instead");
     }
 
-    // ✅ Get Student By ID
-    public Student getStudentById(Long id) {
-        return studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found with ID: " + id));
-    }
+//////////////////////////////////////////////////
+//🔥 LOGIN METHOD (UPDATED)
+//////////////////////////////////////////////////
 
-    // ✅ Update Student
-    public Student updateStudent(Long id, Student updatedStudent) {
+    public Student login(String email, String password) {
 
-        Student existingStudent = studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found with ID: " + id));
+        // remove spaces (IMPORTANT FIX)
+        email = email.trim();
+        password = password.trim();
 
-        existingStudent.setName(updatedStudent.getName());
-        existingStudent.setRollNo(updatedStudent.getRollNo());
-        existingStudent.setSemester(updatedStudent.getSemester());
-        existingStudent.setDepartment(updatedStudent.getDepartment());
+        Student student = studentRepository.findByEmail(email);
 
-        return studentRepository.save(existingStudent);
-    }
+        if(student == null){
+            System.out.println("❌ EMAIL NOT FOUND: " + email);
+            return null;
+        }
 
-    // ✅ Delete Student
-    public void deleteStudent(Long id) {
+        System.out.println("DB PASSWORD: " + student.getPassword());
+        System.out.println("INPUT PASSWORD: " + password);
 
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student not found with ID: " + id));
+        if(!student.getPassword().trim().equals(password)){
+            System.out.println("❌ PASSWORD MISMATCH");
+            return null;
+        }
 
-        studentRepository.delete(student);
+        System.out.println("✅ LOGIN SUCCESS");
+
+        return student;
     }
 }

@@ -3,15 +3,12 @@ package com.college.attendance.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
-import com.college.attendance.model.Attendance;
-import com.college.attendance.model.Subject;
-import com.college.attendance.model.Student;
-import com.college.attendance.repository.AttendanceRepository;
-import com.college.attendance.repository.SubjectRepository;
-import com.college.attendance.repository.StudentRepository;
-import com.college.attendance.security.UserSession;
+import com.college.attendance.model.*;
+import com.college.attendance.repository.*;
 
 @Service
 public class AttendanceService {
@@ -25,17 +22,17 @@ public class AttendanceService {
     @Autowired
     private StudentRepository studentRepository;
 
-    public Attendance markAttendance(Attendance attendance) {
+    @Autowired
+    private UserRepository userRepository;
 
-        // 🔥 Get logged-in faculty from session
-        Long loggedInFacultyId = UserSession.getLoggedInUserId();
+    //////////////////////////////////////////////////////
+    // MARK ATTENDANCE
+    //////////////////////////////////////////////////////
 
-        if (loggedInFacultyId == null) {
-            throw new RuntimeException("User not logged in");
-        }
+    public Attendance markAttendance(Attendance attendance, String facultyId) {
 
-        Long subjectId = attendance.getSubject().getId();
-        Long studentId = attendance.getStudent().getId();
+        String subjectId = attendance.getSubject().getSubjectId();
+        String studentId = attendance.getStudent().getStudentId();
 
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new RuntimeException("Subject not found"));
@@ -43,36 +40,74 @@ public class AttendanceService {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
-        // 🔐 Faculty validation
-        if (!subject.getFaculty().getId().equals(loggedInFacultyId)) {
-            throw new RuntimeException("Not authorized for this subject");
+        User faculty = userRepository.findById(facultyId)
+                .orElseThrow(() -> new RuntimeException("Faculty not found"));
+
+        LocalDate today = LocalDate.now();
+
+        // Prevent duplicate attendance
+        Optional<Attendance> existing = attendanceRepository
+                .findByStudentStudentIdAndSubjectSubjectIdAndDate(
+                        studentId, subjectId, today);
+
+        if (existing.isPresent()) {
+            return existing.get();
         }
 
-        attendance.setSubject(subject);
-        attendance.setStudent(student);
+        // Create new attendance object
+        Attendance newAttendance = new Attendance();
+        newAttendance.setStudent(student);
+        newAttendance.setSubject(subject);
+        newAttendance.setFaculty(faculty);
+        newAttendance.setStatus(attendance.getStatus());
+        newAttendance.setDate(today);
 
-        return attendanceRepository.save(attendance);
+        return attendanceRepository.save(newAttendance);
     }
+
+    //////////////////////////////////////////////////////
+    // GET ALL ATTENDANCE  ⭐ (USED BY FRONTEND)
+    //////////////////////////////////////////////////////
 
     public List<Attendance> getAllAttendance() {
         return attendanceRepository.findAll();
     }
 
-    public double calculatePercentage(Long studentId, Long subjectId) {
+    //////////////////////////////////////////////////////
+    // GET ATTENDANCE BY DATE (FACULTY FILTER)
+    //////////////////////////////////////////////////////
+
+    public List<Attendance> getAttendanceByDate(String date, String facultyId) {
+
+        LocalDate localDate = LocalDate.parse(date);
+
+        return attendanceRepository
+                .findByDateAndFacultyFacultyId(localDate, facultyId);
+    }
+
+    //////////////////////////////////////////////////////
+    // GET ATTENDANCE BY SUBJECT (REPORT)
+    //////////////////////////////////////////////////////
+
+    public List<Attendance> getAttendanceReport(String subjectId) {
+
+        return attendanceRepository.findBySubjectSubjectId(subjectId);
+    }
+
+    //////////////////////////////////////////////////////
+    // CALCULATE ATTENDANCE %
+    //////////////////////////////////////////////////////
+
+    public double calculatePercentage(String studentId, String subjectId) {
 
         long total = attendanceRepository
-                .countByStudentIdAndSubjectId(studentId, subjectId);
+                .countByStudentStudentIdAndSubjectSubjectId(studentId, subjectId);
 
         long present = attendanceRepository
-                .countByStudentIdAndSubjectIdAndStatus(
-                        studentId,
-                        subjectId,
-                        "PRESENT"
-                );
+                .countByStudentStudentIdAndSubjectSubjectIdAndStatus(
+                        studentId, subjectId, "PRESENT");
 
-        if (total == 0) {
-            return 0;
-        }
+        if (total == 0) return 0;
 
         return (present * 100.0) / total;
     }

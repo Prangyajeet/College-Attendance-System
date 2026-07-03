@@ -1,0 +1,53 @@
+<h2>Assign Subject to Faculty</h2>
+
+<h3>Assign Subject</h3>
+
+<table>
+
+<tr>
+<td>Faculty</td>
+<td>
+<select id="facultySelect"></select>
+</td>
+</tr>
+
+<tr>
+<td>Subject</td>
+<td>
+<select id="subjectSelect"></select>
+</td>
+</tr>
+
+<tr>
+<td></td>
+<td>
+<button onclick="assignSubject()">Assign</button>
+</td>
+</tr>
+
+</table>
+
+<br><br>
+
+<h3>Assigned Subjects</h3>
+
+<table border="1" width="100%">
+
+<thead>
+
+<tr>
+<th>Faculty</th>
+<th>Subject</th>
+<th>Department</th>
+<th>Semester</th>
+</tr>
+
+</thead>
+
+<tbody id="assignBody"></tbody>
+
+</table>
+
+<br>
+
+<button onclick="loadAssignments()">Refresh Assignments</button>

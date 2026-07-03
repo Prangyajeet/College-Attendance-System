@@ -10,40 +10,44 @@ import com.college.attendance.service.StudentService;
 
 @RestController
 @RequestMapping("/students")
+@CrossOrigin("*")
 public class StudentController {
 
     @Autowired
     private StudentService studentService;
 
-    // ✅ Add Student
-    @PostMapping
-    public Student addStudent(@RequestBody Student student) {
-        return studentService.saveStudent(student);
+    //////////////////////////////////////////////////
+    // GET students by SUBJECT
+    //////////////////////////////////////////////////
+    @GetMapping("/subject/{subjectId}")
+    public List<Student> getStudentsBySubject(@PathVariable String subjectId) {
+        return studentService.getStudentsBySubject(subjectId);
     }
 
-    // ✅ Get All Students
-    @GetMapping
-    public List<Student> getAllStudents() {
-        return studentService.getAllStudents();
+    //////////////////////////////////////////////////
+    // GET students by SEMESTER
+    //////////////////////////////////////////////////
+    @GetMapping("/semester/{semId}")
+    public List<Student> getStudentsBySemester(@PathVariable String semId) {
+        return studentService.getStudentsBySemester(semId);
     }
 
-    // ✅ Get Student By ID
-    @GetMapping("/{id}")
-    public Student getStudentById(@PathVariable Long id) {
-        return studentService.getStudentById(id);
-    }
+    //////////////////////////////////////////////////
+    // 🔥 STUDENT LOGIN (UPDATED + DEBUG + SAFE)
+    //////////////////////////////////////////////////
+    @PostMapping("/login")
+    public Student login(@RequestBody Student student) {
 
-    // ✅ Update Student
-    @PutMapping("/{id}")
-    public Student updateStudent(@PathVariable Long id,
-                                 @RequestBody Student student) {
-        return studentService.updateStudent(id, student);
-    }
+        if(student == null){
+            System.out.println("❌ REQUEST BODY NULL");
+            return null;
+        }
 
-    // ✅ Delete Student
-    @DeleteMapping("/{id}")
-    public String deleteStudent(@PathVariable Long id) {
-        studentService.deleteStudent(id);
-        return "Student deleted successfully";
+        if(student.getEmail() == null || student.getPassword() == null){
+            System.out.println("❌ EMAIL OR PASSWORD NULL");
+            return null;
+        }
+
+        return studentService.login(student.getEmail(), student.getPassword());
     }
 }

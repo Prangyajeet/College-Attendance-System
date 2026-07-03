@@ -7,71 +7,52 @@ import jakarta.persistence.*;
 public class Subject {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "subject_id")
+    private String subjectId;   // SUB001 from Excel
 
+    @Column(nullable = false)
     private String subjectName;
 
-    private String semester;
-
+    // ✅ FIXED: department_id → dept_id
     @ManyToOne
-    @JoinColumn(name = "department_id")
+    @JoinColumn(name = "dept_id", nullable = false)
     private Department department;
 
+    // ✅ FIXED: semester_id → sem_id
     @ManyToOne
-    @JoinColumn(name = "faculty_id")
-    private User faculty;
+    @JoinColumn(name = "sem_id", nullable = false)
+    private Semester semester;
 
-    // Constructors
-    public Subject() {
-    }
+    public Subject() {}
 
-    public Subject(String subjectName, String semester, Department department, User faculty) {
+    public Subject(String subjectId,
+                   String subjectName,
+                   Department department,
+                   Semester semester) {
+        this.subjectId = subjectId;
         this.subjectName = subjectName;
-        this.semester = semester;
         this.department = department;
-        this.faculty = faculty;
+        this.semester = semester;
     }
 
-    // Getters and Setters
+    public String getSubjectId() { return subjectId; }
+    public String getSubjectName() { return subjectName; }
+    public Department getDepartment() { return department; }
+    public Semester getSemester() { return semester; }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getSubjectName() {
-        return subjectName;
-    }
-
-    public String getSemester() {
-        return semester;
-    }
-
-    public Department getDepartment() {
-        return department;
-    }
-
-    public User getFaculty() {
-        return faculty;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setSubjectId(String subjectId) {
+        this.subjectId = subjectId;
     }
 
     public void setSubjectName(String subjectName) {
         this.subjectName = subjectName;
     }
 
-    public void setSemester(String semester) {
-        this.semester = semester;
-    }
-
     public void setDepartment(Department department) {
         this.department = department;
     }
 
-    public void setFaculty(User faculty) {
-        this.faculty = faculty;
+    public void setSemester(Semester semester) {
+        this.semester = semester;
     }
 }

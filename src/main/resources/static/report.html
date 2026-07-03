@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Attendance Report</title>
+
+<style>
+
+body{
+font-family: Arial;
+background:#f4f7fb;
+padding:40px;
+}
+
+.container{
+width:80%;
+margin:auto;
+background:white;
+padding:25px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+select,button{
+padding:10px;
+margin:10px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+th{
+background:#0f2a44;
+color:white;
+padding:12px;
+}
+
+td{
+padding:10px;
+text-align:center;
+border-bottom:1px solid #ddd;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Attendance Report</h2>
+
+<select id="subject"></select>
+
+<button onclick="loadReport()">Load Report</button>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Student ID</th>
+<th>Name</th>
+<th>Present</th>
+<th>Absent</th>
+<th>%</th>
+</tr>
+
+</thead>
+
+<tbody id="reportBody"></tbody>
+
+</table>
+
+<br>
+
+<button onclick="goBack()">Back to Dashboard</button>
+
+</div>
+
+<script>
+
+const API="http://localhost:8080";
+
+//////////////////////////////////////////////////////
+// LOAD SUBJECTS
+//////////////////////////////////////////////////////
+
+window.onload = loadSubjects;
+
+async function loadSubjects(){
+
+const facultyId = localStorage.getItem("facultyId");
+
+const res = await fetch(`${API}/subjects/faculty/${facultyId}`);
+const subjects = await res.json();
+
+const dropdown=document.getElementById("subject");
+
+dropdown.innerHTML="";
+
+subjects.forEach(s=>{
+
+const opt=document.createElement("option");
+
+opt.value=s.subjectId;
+opt.text=s.subjectName;
+
+dropdown.appendChild(opt);
+
+});
+
+}
+
+//////////////////////////////////////////////////////
+// LOAD REPORT
+//////////////////////////////////////////////////////
+
+async function loadReport(){
+
+const subjectId=document.getElementById("subject").value;
+
+const res=await fetch(`${API}/attendance/report/${subjectId}`);
+const data=await res.json();
+
+const body=document.getElementById("reportBody");
+
+body.innerHTML="";
+
+if(data.length===0){
+
+body.innerHTML=`<tr><td colspan="5">No Records Found</td></tr>`;
+
+return;
+
+}
+
+/* GROUP STUDENT ATTENDANCE */
+
+const map={};
+
+data.forEach(r=>{
+
+const id=r.student.studentId;
+
+if(!map[id]){
+
+map[id]={
+name:r.student.name,
+present:0,
+absent:0
+};
+
+}
+
+if(r.status==="PRESENT"){
+map[id].present++;
+}else{
+map[id].absent++;
+}
+
+});
+
+for(const id in map){
+
+const s=map[id];
+
+const total=s.present+s.absent;
+
+const percent=Math.round((s.present/total)*100);
+
+const row=`
+<tr>
+<td>${id}</td>
+<td>${s.name}</td>
+<td>${s.present}</td>
+<td>${s.absent}</td>
+<td>${percent}%</td>
+</tr>
+`;
+
+body.innerHTML+=row;
+
+}
+
+}
+
+//////////////////////////////////////////////////////
+// BACK BUTTON
+//////////////////////////////////////////////////////
+
+function goBack(){
+
+window.location.href="dashboard.html";
+
+}
+
+</script>
+
+</body>
+</html>

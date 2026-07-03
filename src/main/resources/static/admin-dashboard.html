@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
+<link rel="stylesheet" href="admin.css">
+
+<script>
+
+// Login protection
+if(localStorage.getItem("loggedIn") !== "true"){
+window.location.href="login.html";
+}
+
+</script>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<h2>Admin Dashboard</h2>
+
+<ul>
+
+<li onclick="loadDashboard()">Dashboard</li>
+
+<li onclick="loadPage('faculty.html'); setTimeout(loadFaculty,200);">
+Faculty Management
+</li>
+
+<li onclick="loadPage('students.html'); setTimeout(loadStudents,200);">
+Student Management
+</li>
+
+<li onclick="loadPage('subjects.html'); setTimeout(loadSubjects,200);">
+Subject Management
+</li>
+
+<li onclick="loadPage('departments.html'); setTimeout(loadDepartments,200);">
+Department Management
+</li>
+
+
+
+<li onclick="loadPage('assign.html'); setTimeout(loadAssignPage,200);">
+Assign Subject
+</li>
+
+<li onclick="loadPage('attendance.html')">
+Attendance Overview
+</li>
+
+<li onclick="logout()">Logout</li>
+
+</ul>
+
+</div>
+
+
+<div class="main">
+
+<h1>Admin Dashboard</h1>
+
+<div class="cards">
+
+<div class="card blue">
+<h3>Total Faculty</h3>
+<h2 id="facultyCount">0</h2>
+</div>
+
+<div class="card green">
+<h3>Total Students</h3>
+<h2 id="studentCount">0</h2>
+</div>
+
+<div class="card orange">
+<h3>Total Subjects</h3>
+<h2 id="subjectCount">0</h2>
+</div>
+
+<div class="card purple">
+<h3>Total Departments</h3>
+<h2 id="departmentCount">0</h2>
+</div>
+
+</div>
+
+<div id="contentArea"></div>
+
+</div>
+
+<script src="admin.js"></script>
+
+</body>
+</html>

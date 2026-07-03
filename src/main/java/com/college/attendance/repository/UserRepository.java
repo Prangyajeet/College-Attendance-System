@@ -1,11 +1,23 @@
 package com.college.attendance.repository;
 
+import java.util.Optional;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+
 import com.college.attendance.model.User;
 
-import java.util.Optional;
+public interface UserRepository 
+        extends JpaRepository<User, String> {
 
-public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmail(String email);
 
-    Optional<User> findByEmailAndPassword(String email, String password);
+    Optional<User> findByFacultyId(String facultyId);
+
+    long countByRole(String role);
+
+    List<User> findByRole(String role);
+
+    // NEW - sorted faculty list
+    List<User> findByRoleOrderByFacultyIdAsc(String role);
 }

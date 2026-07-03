@@ -3,21 +3,22 @@ package com.college.attendance.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.college.attendance.model.Subject;
-import com.college.attendance.repository.SubjectRepository;
+import com.college.attendance.repository.FacultySubjectMapRepository;
 
 @Service
 public class SubjectService {
 
     @Autowired
-    private SubjectRepository subjectRepository;
+    private FacultySubjectMapRepository mapRepository;
 
-    public Subject saveSubject(Subject subject) {
-        return subjectRepository.save(subject);
-    }
+    public List<Subject> getSubjectsByFaculty(String facultyId) {
 
-    public List<Subject> getAllSubjects() {
-        return subjectRepository.findAll();
+        return mapRepository.findByFaculty_FacultyId(facultyId)
+                .stream()
+                .map(map -> map.getSubject())
+                .collect(Collectors.toList());
     }
 }

@@ -1,0 +1,91 @@
+<h2>Subject Management</h2>
+
+<!-- Add Subject Form -->
+
+<h3>Add Subject</h3>
+
+<table>
+
+<tr>
+<td>Subject ID</td>
+<td><input type="text" id="subjectId"></td>
+</tr>
+
+<tr>
+<td>Subject Name</td>
+<td><input type="text" id="subjectName"></td>
+</tr>
+
+<tr>
+<td>Department</td>
+<td>
+
+<select id="subjectDept">
+<option value="D01">D01</option>
+<option value="D02">D02</option>
+<option value="D03">D03</option>
+<option value="D04">D04</option>
+<option value="D05">D05</option>
+<option value="D06">D06</option>
+<option value="D07">D07</option>
+</select>
+
+</td>
+</tr>
+
+<tr>
+<td>Semester</td>
+<td>
+
+<select id="subjectSem">
+<option value="S1">S1</option>
+<option value="S2">S2</option>
+<option value="S3">S3</option>
+<option value="S4">S4</option>
+<option value="S5">S5</option>
+<option value="S6">S6</option>
+<option value="S7">S7</option>
+<option value="S8">S8</option>
+</select>
+
+</td>
+</tr>
+
+<tr>
+<td></td>
+<td>
+<button onclick="addSubject()">Add Subject</button>
+</td>
+</tr>
+
+</table>
+
+<br><br>
+
+<!-- Subject Table -->
+
+<h3>Subject List</h3>
+
+<table border="1" width="100%">
+
+<thead>
+
+<tr>
+<th>Subject ID</th>
+<th>Subject Name</th>
+<th>Department</th>
+<th>Semester</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody id="subjectBody">
+
+</tbody>
+
+</table>
+
+<br>
+
+<button onclick="loadSubjects()">Refresh Subject List</button>

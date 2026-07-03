@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Student Login</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#1e3a8a,#2563eb);
+}
+
+/* LOGIN CARD */
+.container{
+    background:white;
+    padding:40px;
+    border-radius:15px;
+    width:350px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    text-align:center;
+    animation:fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn{
+    from{opacity:0; transform:translateY(20px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+h2{
+    margin-bottom:20px;
+    color:#1e293b;
+}
+
+/* INPUTS */
+.input-group{
+    margin-bottom:20px;
+    text-align:left;
+}
+
+.input-group label{
+    font-size:14px;
+    color:#374151;
+}
+
+.input-group input{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    transition:0.3s;
+}
+
+.input-group input:focus{
+    border-color:#2563eb;
+    outline:none;
+    box-shadow:0 0 5px rgba(37,99,235,0.3);
+}
+
+/* BUTTON */
+button{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#2563eb;
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#1e40af;
+}
+
+/* ERROR */
+#error{
+    color:red;
+    margin-top:10px;
+    font-size:14px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Student Login</h2>
+
+<!-- EMAIL -->
+<div class="input-group">
+    <label>Email</label>
+    <input type="email" id="studentEmail" placeholder="Enter Email">
+</div>
+
+<!-- PASSWORD -->
+<div class="input-group">
+    <label>Password</label>
+    <input type="password" id="studentPassword" placeholder="Enter Password">
+</div>
+
+<button onclick="login()">Login</button>
+
+<div id="error"></div>
+
+</div>
+
+<script>
+
+function login(){
+
+    let email = document.getElementById("studentEmail").value.trim();
+    let password = document.getElementById("studentPassword").value.trim();
+
+    // ✅ VALIDATION
+    if(!email || !password){
+        document.getElementById("error").innerText = "Please fill all fields";
+        return;
+    }
+
+    console.log("👉 Calling STUDENT LOGIN API");
+
+    let payload = {
+        email: email,
+        password: password
+    };
+
+    fetch("http://localhost:8080/students/login",{
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(payload)
+    })
+    .then(res => {
+
+        // ✅ HANDLE SERVER ERROR
+        if(!res.ok){
+            throw new Error("Server Error");
+        }
+
+        return res.json();
+    })
+    .then(data => {
+
+        console.log("Response:", data);
+
+        // ✅ INVALID LOGIN
+        if(!data){
+            document.getElementById("error").innerText = "Invalid Email or Password";
+            return;
+        }
+
+        // ✅ STORE DATA
+        localStorage.setItem("studentId", data.studentId);
+        localStorage.setItem("studentName", data.name);
+        localStorage.setItem("studentDept", data.department.deptId);
+        localStorage.setItem("studentSem", data.semester.semId);
+
+        // ✅ SUCCESS
+        window.location.href = "student.html";
+    })
+    .catch(err => {
+        console.error(err);
+        document.getElementById("error").innerText = "Server Error (Check Backend)";
+    });
+}
+
+</script>
+
+</body>
+</html>

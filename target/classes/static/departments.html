@@ -1,0 +1,52 @@
+<h2>Department Management</h2>
+
+<!-- Add Department -->
+
+<h3>Add Department</h3>
+
+<table>
+
+<tr>
+<td>Department ID</td>
+<td><input type="text" id="deptId"></td>
+</tr>
+
+<tr>
+<td>Department Name</td>
+<td><input type="text" id="deptName"></td>
+</tr>
+
+<tr>
+<td></td>
+<td>
+<button onclick="addDepartment()">Add Department</button>
+</td>
+</tr>
+
+</table>
+
+<br><br>
+
+<h3>Department List</h3>
+
+<table border="1" width="100%">
+
+<thead>
+
+<tr>
+<th>Department ID</th>
+<th>Department Name</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody id="deptBody">
+
+</tbody>
+
+</table>
+
+<br>
+
+<button onclick="loadDepartments()">Refresh Department List</button>

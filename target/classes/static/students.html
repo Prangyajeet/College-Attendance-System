@@ -1,0 +1,110 @@
+<h2>Student Management</h2>
+
+<!-- Add Student Form -->
+
+<h3>Add Student</h3>
+
+<table>
+
+<tr>
+<td>Student ID</td>
+<td><input type="text" id="studentId"></td>
+</tr>
+
+<tr>
+<td>Name</td>
+<td><input type="text" id="studentName"></td>
+</tr>
+
+<tr>
+<td>Email</td>
+<td><input type="email" id="studentEmail"></td>
+</tr>
+
+<tr>
+<td>Department</td>
+<td>
+
+<select id="studentDept">
+<option value="D01">D01</option>
+<option value="D02">D02</option>
+<option value="D03">D03</option>
+<option value="D04">D04</option>
+<option value="D05">D05</option>
+<option value="D06">D06</option>
+<option value="D07">D07</option>
+</select>
+
+</td>
+</tr>
+
+<!-- ⭐ NEW SEMESTER -->
+<tr>
+<td>Semester</td>
+<td>
+
+<select id="studentSem">
+<option value="S1">S1</option>
+<option value="S2">S2</option>
+<option value="S3">S3</option>
+<option value="S4">S4</option>
+<option value="S5">S5</option>
+<option value="S6">S6</option>
+<option value="S7">S7</option>
+<option value="S8">S8</option>
+</select>
+
+</td>
+</tr>
+
+<tr>
+<td></td>
+<td>
+<button onclick="addStudent()">Add Student</button>
+</td>
+</tr>
+
+</table>
+
+<br><br>
+
+<!-- ⭐ FILTER -->
+<h3>Filter by Department</h3>
+
+<select id="filterDept" onchange="filterStudents()">
+<option value="all">All</option>
+<option value="D01">D01</option>
+<option value="D02">D02</option>
+<option value="D03">D03</option>
+<option value="D04">D04</option>
+<option value="D05">D05</option>
+<option value="D06">D06</option>
+<option value="D07">D07</option>
+</select>
+
+<br><br>
+
+<!-- Student Table -->
+
+<h3>Student List</h3>
+
+<table border="1" width="100%">
+
+<thead>
+<tr>
+<th>Student ID</th>
+<th>Name</th>
+<th>Email</th>
+<th>Department</th>
+<th>Semester</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="studentBody"></tbody>
+
+</table>
+
+<br>
+
+<button onclick="loadStudents()">Refresh Student List</button>

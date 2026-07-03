@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Student Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+}
+
+/* HEADER */
+.header{
+    background:linear-gradient(90deg,#1e3a8a,#2563eb);
+    color:white;
+    padding:18px 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.header h2{
+    margin-bottom:4px;
+}
+
+/* CONTAINER */
+.container{
+    padding:25px;
+}
+
+/* CARD */
+.card{
+    background:white;
+    padding:20px;
+    margin-bottom:20px;
+    border-radius:12px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.08);
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+}
+
+/* SUMMARY */
+#percentage{
+    font-size:36px;
+    margin-top:10px;
+}
+
+/* GRAPH SIZE FIX */
+.chart-container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-top:10px;
+}
+
+#attendanceChart{
+    width:220px !important;
+    height:220px !important;
+}
+
+/* TABLE */
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+}
+
+th{
+    background:#0f2a44;
+    color:white;
+    padding:12px;
+}
+
+td{
+    padding:12px;
+    text-align:center;
+    border-bottom:1px solid #eee;
+}
+
+/* BUTTON */
+button{
+    padding:10px 16px;
+    background:#ef4444;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+button:hover{
+    background:#dc2626;
+}
+
+/* STATUS COLORS */
+.present{
+    color:#16a34a;
+    font-weight:600;
+}
+
+.absent{
+    color:#dc2626;
+    font-weight:600;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <div>
+        <h2 id="studentName"></h2>
+        <small id="studentInfo"></small>
+    </div>
+
+    <button onclick="logout()">Logout</button>
+</div>
+
+<div class="container">
+
+    <!-- Attendance Summary -->
+    <div class="card">
+        <h3>Attendance Summary</h3>
+        <h2 id="percentage">0%</h2>
+        <p id="counts">Present: 0 | Absent: 0</p>
+    </div>
+
+    <!-- GRAPH CARD -->
+    <div class="card">
+        <h3>Attendance Graph</h3>
+
+        <div class="chart-container">
+            <canvas id="attendanceChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Subject-wise Attendance -->
+    <div class="card">
+        <h3>Subject-wise Attendance</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Semester</th>
+                    <th>Total</th>
+                    <th>Present</th>
+                    <th>Percentage</th>
+                </tr>
+            </thead>
+            <tbody id="subjectTable"></tbody>
+        </table>
+    </div>
+
+    <!-- Recent Records -->
+    <div class="card">
+        <h3>Recent Attendance</h3>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Subject</th>
+                    <th>Semester</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="recordTable"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script src="student.js"></script>
+
+</body>
+</html>

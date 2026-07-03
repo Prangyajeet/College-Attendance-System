@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Attendance Records</title>
+
+<style>
+body{
+font-family:Arial;
+background:#f4f7fb;
+padding:30px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:12px;
+box-shadow:0 4px 12px rgba(0,0,0,.1);
+}
+
+h2{
+margin-bottom:20px;
+}
+
+input{
+padding:10px;
+border-radius:6px;
+border:1px solid #ccc;
+margin-bottom:15px;
+}
+
+button{
+padding:10px 15px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+margin-left:10px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+th{
+background:#0f2a44;
+color:white;
+padding:12px;
+}
+
+td{
+padding:12px;
+text-align:center;
+border-bottom:1px solid #eee;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h2>Attendance Records By Date</h2>
+
+<label>Select Date:</label>
+<input type="date" id="date">
+
+<button onclick="loadByDate()">Search</button>
+<button onclick="window.location.href='dashboard.html'">
+Back
+</button>
+
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Student</th>
+<th>Subject</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="recordsTable"></tbody>
+</table>
+
+</div>
+
+<script>
+
+const API="http://localhost:8080";
+
+async function loadByDate(){
+
+const date=document.getElementById("date").value;
+
+if(!date){
+alert("Please select a date");
+return;
+}
+
+/* GET LOGGED IN FACULTY */
+const facultyId = localStorage.getItem("facultyId");
+
+/* CALL API WITH FACULTY FILTER */
+const res=await fetch(`${API}/attendance/date?date=${date}&facultyId=${facultyId}`);
+
+const data=await res.json();
+
+const tbody=document.getElementById("recordsTable");
+tbody.innerHTML="";
+
+if(data.length===0){
+tbody.innerHTML=
+`<tr><td colspan="4">No Records Found</td></tr>`;
+return;
+}
+
+data.forEach(a=>{
+tbody.innerHTML+=`
+<tr>
+<td>${a.date}</td>
+<td>${a.student.name}</td>
+<td>${a.subject.subjectName}</td>
+<td>${a.status}</td>
+</tr>`;
+});
+
+}
+
+</script>
+
+</body>
+</html>

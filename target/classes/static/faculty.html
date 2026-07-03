@@ -1,0 +1,85 @@
+<h2>Faculty Management</h2>
+
+<!-- Add Faculty Form -->
+
+<h3>Add Faculty</h3>
+
+<table>
+
+<tr>
+<td>Faculty ID</td>
+<td><input type="text" id="facultyId"></td>
+</tr>
+
+<tr>
+<td>Name</td>
+<td><input type="text" id="facultyName"></td>
+</tr>
+
+<tr>
+<td>Email</td>
+<td><input type="email" id="facultyEmail"></td>
+</tr>
+
+<tr>
+<td>Password</td>
+<td><input type="password" id="facultyPassword"></td>
+</tr>
+
+<tr>
+<td>Department</td>
+<td>
+
+<select id="facultyDept">
+
+<option value="D01">D01</option>
+<option value="D02">D02</option>
+<option value="D03">D03</option>
+<option value="D04">D04</option>
+<option value="D05">D05</option>
+<option value="D06">D06</option>
+<option value="D07">D07</option>
+
+</select>
+
+</td>
+</tr>
+
+<tr>
+<td></td>
+<td>
+<button onclick="addFaculty()">Add Faculty</button>
+</td>
+</tr>
+
+</table>
+
+<br><br>
+
+<!-- Faculty Table -->
+
+<h3>Faculty List</h3>
+
+<table border="1" width="100%" id="facultyTable">
+
+<thead>
+<tr>
+
+<th>Faculty ID</th>
+<th>Name</th>
+<th>Email</th>
+<th>Department</th>
+<th>Action</th>
+
+</tr>
+</thead>
+
+<tbody id="facultyBody">
+
+</tbody>
+
+</table>
+
+<br>
+
+<button onclick="loadFaculty()">Refresh Faculty List</button>

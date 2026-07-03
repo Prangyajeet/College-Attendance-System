@@ -9,6 +9,7 @@ import com.college.attendance.service.LoginService;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin
 public class LoginController {
 
     @Autowired
@@ -16,6 +17,9 @@ public class LoginController {
 
     @PostMapping("/login")
     public LoginResponseDTO login(@RequestBody LoginRequestDTO request) {
+
+        // Call login service
         return loginService.login(request);
+
     }
 }

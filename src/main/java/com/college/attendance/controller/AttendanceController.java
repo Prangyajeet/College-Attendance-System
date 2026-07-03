@@ -6,56 +6,55 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import com.college.attendance.model.Attendance;
+import com.college.attendance.repository.AttendanceRepository;   // ✅ IMPORT
 import com.college.attendance.service.AttendanceService;
-import com.college.attendance.dto.AttendanceResponseDTO;
 
 @RestController
 @RequestMapping("/attendance")
+@CrossOrigin("*")
 public class AttendanceController {
 
     @Autowired
     private AttendanceService attendanceService;
 
+    // ✅ ADD THIS (FIX)
+    @Autowired
+    private AttendanceRepository attendanceRepository;
+
+    // Save attendance
     @PostMapping
-    public AttendanceResponseDTO markAttendance(
-            @RequestBody Attendance attendance) {
+    public Attendance markAttendance(
+            @RequestBody Attendance attendance,
+            @RequestParam String facultyId) {
 
-        Attendance saved =
-                attendanceService.markAttendance(attendance);
-
-        return new AttendanceResponseDTO(
-                saved.getId(),
-                saved.getDate(),
-                saved.getStatus(),
-                saved.getStudent().getId(),
-                saved.getStudent().getName(),
-                saved.getSubject().getId(),
-                saved.getSubject().getSubjectName()
-        );
+        return attendanceService.markAttendance(attendance, facultyId);
     }
 
+    // Attendance report by subject
+    @GetMapping("/report/{subjectId}")
+    public List<Attendance> getAttendanceReport(@PathVariable String subjectId) {
+
+        return attendanceService.getAttendanceReport(subjectId);
+    }
+
+    // Attendance by date (faculty specific)
+    @GetMapping("/date")
+    public List<Attendance> getAttendanceByDate(
+            @RequestParam String date,
+            @RequestParam String facultyId) {
+
+        return attendanceService.getAttendanceByDate(date, facultyId);
+    }
+
+    // Get all attendance
     @GetMapping
-    public List<AttendanceResponseDTO> getAllAttendance() {
-
-        return attendanceService.getAllAttendance()
-                .stream()
-                .map(a -> new AttendanceResponseDTO(
-                        a.getId(),
-                        a.getDate(),
-                        a.getStatus(),
-                        a.getStudent().getId(),
-                        a.getStudent().getName(),
-                        a.getSubject().getId(),
-                        a.getSubject().getSubjectName()
-                ))
-                .toList();
+    public List<Attendance> getAllAttendance(){
+        return attendanceService.getAllAttendance();
     }
 
-    @GetMapping("/percentage")
-    public double getPercentage(
-            @RequestParam Long studentId,
-            @RequestParam Long subjectId) {
-
-        return attendanceService.calculatePercentage(studentId, subjectId);
+    // ✅ FIXED STUDENT API
+    @GetMapping("/student/{studentId}")
+    public List<Attendance> getAttendanceByStudent(@PathVariable String studentId){
+        return attendanceRepository.findByStudent_StudentId(studentId);
     }
 }

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Dean Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="dashboard-page">
+
+<div class="header">
+    <h2>🎓 Dean Dashboard</h2>
+
+    <div>
+        <span><b>Sujata Chakarvarty</b> → School of Engineering & Technology</span>
+        <button onclick="logout()">Logout</button>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- FILTERS -->
+    <div class="filters">
+
+        <select id="department">
+            <option value="">All Departments</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="ECE">ECE</option>
+            <option value="EEE">EEE</option>
+            <option value="Mechanical">Mechanical</option>
+            <option value="Civil">Civil</option>
+            <option value="Mining">Mining</option>
+            <option value="chemical Engineering">chemical Engineering</option>
+        </select>
+
+        <select id="semester">
+            <option value="">All Semester</option>
+            <option value="1">Sem 1</option>
+            <option value="2">Sem 2</option>
+            <option value="3">Sem 3</option>
+            <option value="4">Sem 4</option>
+            <option value="5">Sem 5</option>
+            <option value="6">Sem 6</option>
+            <option value="7">Sem 7</option>
+            <option value="8">Sem 8</option>
+        </select>
+
+        <!-- ✅ BACK TO ORIGINAL POSITION -->
+        <button onclick="applyFilters()">Apply</button>
+
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="card">
+            <h4>Total Records</h4>
+            <p id="total">0</p>
+        </div>
+
+        <div class="card">
+            <h4>Average Attendance</h4>
+            <p id="avg">0%</p>
+        </div>
+
+        <div class="card">
+            <h4>Low Attendance</h4>
+            <p id="low">0</p>
+        </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-card">
+        <h3>Attendance Report</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Dept</th>
+                    <th>Sem</th>
+                    <th>Subject</th>
+                    <th>%</th>
+                </tr>
+            </thead>
+            <tbody id="table"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script src="dean.js"></script>
+
+</body>
+</html>
